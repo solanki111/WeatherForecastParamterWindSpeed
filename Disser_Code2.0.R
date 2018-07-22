@@ -219,6 +219,8 @@ for(fp in 1:10) {
   
 }
 
+#Visualising scatter plot between observed and predicted wind speed for each forecast periods
+#and also doing error computation
 for(fp in 1:10) {
   print(paste("For forecast period:",fp))
   
@@ -231,24 +233,23 @@ for(fp in 1:10) {
   winds.fp.cc.agg <- aggregate(winds.fp.cc, 
                                 by=list(date=winds.fp.cc$date), 
                                 FUN=mean)
+
+  #gp<- ggplot(data= winds.fp.cc.agg, mapping= aes(wspeed_fore, wspeed)) + 
+  #        geom_point(color="blue") +
+  #        geom_abline(intercept = 0, slope = 1, color="darkred") +
+  #        theme(axis.text.x = element_text(angle=45, hjust=1, vjust=0.5)) +
+  #        scale_x_continuous("Predicted Wind Speed", limits=c(0, 20)) +
+  #        scale_y_continuous("Observed Wind Speed", limits=c(0, 20)) +
+  #        ggtitle(paste("Observed & Forecasted Wind Speed for forecast period:", fp))
   
-#  print(plot(wspeed ~ wspeed_fore, 
-#       data = winds.fp.cc.agg, 
-#       main=paste("Observed & Forecasted Wind Speed for forecast period:", fp),
-#       col="darkred", 
-#       ylab="Observed Wind Speed",
-#       xlab="Forecast Wind Speed"),
-#       ylim= range(c(0,12)),
-#       xlim= range(c(0,12))
-#       )
+  #Saving plots to a file
+  #ggsave(gp, file=paste0("Obs&Fore_scatter_plot_fp",fp,".png"), width = 14, height = 10, units = "cm")
   
-  print(ggplot(data= winds.fp.cc.agg, mapping= aes(wspeed_fore, wspeed)) + 
-          geom_point(color="blue") +
-          geom_abline(intercept = 0, slope = 1, color="darkred") +
-          theme(axis.text.x = element_text(angle=45, hjust=1, vjust=0.5)) +
-          scale_x_continuous("Predicted Wind Speed", limits=c(0, 20)) +
-          scale_y_continuous("Observed Wind Speed", limits=c(0, 20)) +
-          ggtitle(paste("Observed & Forecasted Wind Speed for forecast period:", fp)))
+  ##Error computation
+  print(paste("mse: ", mse(winds.fp.cc.agg$wspeed, winds.fp.cc.agg$wspeed_fore)))
+  print(paste("mae: ", mae(winds.fp.cc.agg$wspeed, winds.fp.cc.agg$wspeed_fore)))
+  print(paste("rmse: ", rmse(winds.fp.cc.agg$wspeed, winds.fp.cc.agg$wspeed_fore)))
+  
 }
 
 
@@ -262,14 +263,17 @@ for(fp in 1:10) {
     winds.fp.stat.cc <- winds.fp.stat[complete.cases(winds.fp.stat), ]
     print(paste("For Station id:", stat))
     
-#    print(ggplot(data= winds.fp.stat.cc, mapping= aes(wspeed_fore, wspeed)) + 
-#          geom_point(color="blue") +
-#          geom_abline(intercept = 0, slope = 1, color="darkred") +
-#          theme(axis.text.x = element_text(angle=45, hjust=1, vjust=0.5)) +
-#          scale_x_continuous("Predicted Wind Speed", limits=c(0, 20)) +
-#          scale_y_continuous("Observed Wind Speed", limits=c(0, 20)) +
-#          ggtitle(paste("Observed & Forecasted Wind Speed for forecast period:", fp,
-#                        " and station id:", stat)))
+    gp2<- ggplot(data= winds.fp.stat.cc, mapping= aes(wspeed_fore, wspeed)) + 
+            geom_point(color="blue") +
+            geom_abline(intercept = 0, slope = 1, color="darkred") +
+            theme(axis.text.x = element_text(angle=45, hjust=1, vjust=0.5)) +
+            scale_x_continuous("Predicted Wind Speed", limits=c(0, 20)) +
+            scale_y_continuous("Observed Wind Speed", limits=c(0, 20)) +
+            ggtitle(paste("Observed & Forecasted Wind Speed for forecast period:", fp,
+                          " and station id:", stat))
+    
+    #Saving plots to a file
+    ggsave(gp2, file=paste0("Obs&Fore_scatter_plot_fp",fp,"_st",stat,".png"), width = 14, height = 10, units = "cm")
     
     ##Error computation
     print(paste("mse: ", mse(winds.fp.stat.cc$wspeed, winds.fp.stat.cc$wspeed_fore)))
@@ -278,8 +282,3 @@ for(fp in 1:10) {
     
   }
 }
-
-
-mse(winds.fp1.st1.cc$wspeed, winds.fp1.st1.cc$wspeed_fore)
-
-
