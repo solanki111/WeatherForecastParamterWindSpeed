@@ -3,7 +3,7 @@ library(dplyr)
 library(colortools)
 library(ggplot2)
 
-winds <- read.csv("C:/Users/solab/OneDrive/Documents/Data_Science_Notes/Dissertation_in_Stats/Initial_files/All_data.csv", header=T, row.names=NULL, na.strings=c(""))
+winds <- read.csv("C:/Users/../data.csv", header=T, row.names=NULL, na.strings=c(""))
 summary(winds)
 View(winds)
 
